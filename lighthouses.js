@@ -2693,10 +2693,10 @@ const LIGHTHOUSE_DATA =
   {
     "id": "1342.4",
     "name": "삼정3리항\n북방파제 등대",
-    "nameEn": "Samjeong-3ri N Breakwater",
+    "nameEn": "Samjeong-3ri Hang",
     "type": "고정표지",
     "sea": "동해안",
-    "light": "Fl R 4s 12m 8M",
+    "light": "Fl R 4s 12m 7M",
     "lat": 36.0071944,
     "lng": 129.5780833
   },
@@ -2716,7 +2716,7 @@ const LIGHTHOUSE_DATA =
     "nameEn": "Samjung Hang",
     "type": "고정표지",
     "sea": "동해안",
-    "light": "Fl R 6s 15m 8M",
+    "light": "Fl R 6s 15m 7M",
     "lat": 36.0023333,
     "lng": 129.5738611
   },
@@ -3996,7 +3996,7 @@ const LIGHTHOUSE_DATA =
     "nameEn": "Oryukdo",
     "type": "고정표지",
     "sea": "남해안",
-    "light": "Fl W 10s 53m 11M",
+    "light": "Fl W 10s 53m 17M",
     "lat": 35.0913056,
     "lng": 129.1269167
   },
@@ -5475,7 +5475,7 @@ const LIGHTHOUSE_DATA =
     "name": "가오도\n등대",
     "nameEn": "Gaodo",
     "type": "고정표지",
-    "sea": "남해안",
+    "sea": "남��안",
     "light": "Fl W 6s 17m 10M",
     "lat": 34.6809722,
     "lng": 128.5802778
@@ -5485,7 +5485,7 @@ const LIGHTHOUSE_DATA =
     "name": "석문도\n등대",
     "nameEn": "Seokmundo",
     "type": "고정표지",
-    "sea": "남���안",
+    "sea": "남해안",
     "light": "Fl W 5s 17m 7M",
     "lat": 34.6935,
     "lng": 128.5988889
@@ -8231,16 +8231,6 @@ const LIGHTHOUSE_DATA =
     "lng": 126.96475
   },
   {
-    "id": "2566.5",
-    "name": "득암항\n동방파제 등대",
-    "nameEn": "Deugam Hang E Breakwater",
-    "type": "고정표지",
-    "sea": "남해안",
-    "light": "Fl R 4s 15m 9M",
-    "lat": 34.3571667,
-    "lng": 126.8938611
-  },
-  {
     "id": "2566.6",
     "name": "득암항\n서방파제 등대",
     "nameEn": "Deugam Hang W Breakwater",
@@ -8449,6 +8439,16 @@ const LIGHTHOUSE_DATA =
     "light": "Fl Y 5s 14m 7M",
     "lat": 34.4471944,
     "lng": 126.8346389
+  },
+  {
+    "id": "2581.1",
+    "name": "보옥항\n남방파제 등대",
+    "nameEn": "Book Hang S Breakwater",
+    "type": "고정표지",
+    "sea": "남해안",
+    "light": "Fl R 4s 19m 9M",
+    "lat": 34.1300278,
+    "lng": 126.5079722
   },
   {
     "id": "2581.2",
@@ -11621,16 +11621,6 @@ const LIGHTHOUSE_DATA =
     "lng": 126.4247778
   },
   {
-    "id": "3148",
-    "name": "상왕등도\n등대",
-    "nameEn": "Sangwangdeungdo",
-    "type": "고정표지",
-    "sea": "서해안",
-    "light": "Fl W 5s 178m 11M",
-    "lat": 35.6621111,
-    "lng": 126.1070556
-  },
-  {
     "id": "3148.1",
     "name": "상왕등도항\n방파제 등대",
     "nameEn": "Sangwangdeungdo Hang",
@@ -12822,7 +12812,7 @@ const LIGHTHOUSE_DATA =
   },
   {
     "id": "3297",
-    "name": "만리포항\n방파제 등대",
+    "name": "만리포항\n��파제 등대",
     "nameEn": "Mallipo  Hang",
     "type": "고정표지",
     "sea": "서해안",

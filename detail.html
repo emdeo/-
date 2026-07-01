@@ -1412,12 +1412,29 @@ function pickLhPhoto() {
       const lhId = String(lh.id || lh.name);
       await LhPhotoDB.save(lhId, dataUrl, thumb, date);
 
-      // 갤러리(다운로드) 자동 저장
+      // 다운로드 저장
       const fname = `${(lh.name||'등대').replace(/\s+/g,'')}_${_lhFmtDateFile(date)}.jpg`;
       const a = document.createElement('a');
       a.href = dataUrl; a.download = fname;
       document.body.appendChild(a); a.click();
       setTimeout(() => document.body.removeChild(a), 500);
+
+      // 아이폰(iOS)에서만 사진 앱 저장 안내 토스트 표시
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        const toast = document.createElement('div');
+        toast.textContent = '📸 사진 앱에 저장하려면 사진을 열고 상단 공유 버튼을 눌러주세요';
+        toast.style.cssText = `
+          position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+          background:rgba(15,23,42,0.85); color:#fff;
+          padding:12px 18px; border-radius:12px;
+          font-size:13px; font-weight:500; line-height:1.5;
+          text-align:center; max-width:calc(100vw - 48px);
+          z-index:99999; pointer-events:none;
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+      }
 
       await renderLhGallery();
     } catch(err) {

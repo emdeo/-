@@ -2031,6 +2031,32 @@ html:has(body.detail-page) {
     flex-shrink: 0;
     white-space: nowrap;
   }
+  /* ── detail 튜토리얼 모바일 전용: 캐릭터 왼쪽, 말풍선 오른쪽 ── */
+  #detail-tutorial-overlay .tutorial-wrap {
+    flex-direction: row;
+    align-items: flex-end;
+    width: calc(100vw - 24px);
+    left: 12px !important;
+  }
+  #detail-tutorial-overlay .tutorial-mascot-img {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+  #detail-tutorial-overlay .tutorial-bubble {
+    flex: 1;
+    width: 0;
+    max-width: 100%;
+    margin-left: 10px;
+    margin-top: 0;
+    border-radius: 16px;
+  }
+  #detail-tutorial-overlay .tutorial-bubble-tail {
+    display: block;
+    left: -16px;
+    bottom: 40px;
+  }
 }
 /* ── AR 페이지 사용법 안내 (3단계) ── */
 #ar-tutorial-overlay {
@@ -2177,4 +2203,27 @@ html:has(body.detail-page) {
   font-weight: 600;
   cursor: pointer;
 }
-.ferry-toggle-btn:hover { background: var(--gray2); color: var(--navy); }
+.ferry-toggle-btn:hover { background: var(--gray2); color: var(--navy); 
+}
+/* ── detail.html 사용법 튜토리얼 (예시 페이지) ── */
+#detail-tutorial-overlay {
+  position: fixed; inset: 0;
+  z-index: 10000;
+  display: none;
+  background: var(--gray1);
+  overflow-y: auto;
+}
+#detail-tutorial-overlay.active { display: block; }
+#detail-tutorial-overlay .tutorial-skip-btn {
+  position: absolute;
+  top: 10px; right: 10px; left: auto;
+  width: 28px; height: 28px;
+  font-size: .85rem;
+  border: 1px solid var(--gray2);
+  box-shadow: none;
+}
+.dt-fake-page {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 6rem;
+}

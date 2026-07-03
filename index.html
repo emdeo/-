@@ -593,7 +593,7 @@ function renderMarkers() {
       <div class="marker-pin" style="background:${color};">
         <span>${lh.emoji}</span>
       </div>
-      <div class="marker-label">${lh.name}</div>
+      <div class="marker-label">${lh.name.replace(/\n/g, ' ')}</div>
     `;
     el.addEventListener("click", () => openPopup(lh, el));
     layer.appendChild(el);
@@ -722,12 +722,10 @@ function openPopup(lh, markerEl) {
     })
     .catch(() => {});
 
-document.getElementById("popup-name").textContent = lh.name;
-document.getElementById("popup-header-link").onclick = () => {
+document.getElementById("popup-name").textContent = lh.name.replace(/\n/g, ' ');document.getElementById("popup-header-link").onclick = () => {
   const params = new URLSearchParams({
   id:     lh.id   || "",
-  name:   lh.name || "",
-  nameEn: lh.nameEn || "",
+  name:   (lh.name || "").replace(/\n/g, ' '),
   sea:    lh.sea  || "",
   light: lh.light || "",
   lat:    lh.lat  || "",
@@ -769,8 +767,7 @@ window.location.href = `detail.html?${params.toString()}`;
   document.getElementById("btn-detail").onclick = () => {
   const params = new URLSearchParams({
     id:     lh.id   || "",
-    name:   lh.name || "",
-    nameEn: lh.nameEn || "",
+    name:   (lh.name || "").replace(/\n/g, ' '),
     sea:    lh.sea  || "",
     light: lh.light || "",
     lat:    lh.lat  || "",
@@ -1099,7 +1096,7 @@ function renderSearchDropdown() {
         if (!lh) return;
         selectLighthouse(lh);
         dropdown.classList.remove("visible");
-        document.getElementById("search-input").value = lh.name;
+        document.getElementById("search-input").value = lh.name.replace(/\n/g, ' ');
       });
     });
   }
@@ -1247,7 +1244,7 @@ if (navigator.geolocation) {
             ">
               <span style="transform:rotate(45deg);font-size:.95rem;">${lh.emoji}</span>
             </div>
-            <div style="margin-top:4px;background:white;color:#1b2e4b;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.12);white-space:nowrap;max-width:80px;overflow:hidden;text-overflow:ellipsis;text-align:center;">${lh.name}</div>
+            <div style="margin-top:4px;background:white;color:#1b2e4b;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.12);white-space:nowrap;max-width:80px;overflow:hidden;text-overflow:ellipsis;text-align:center;">${lh.name.replace(/\n/g, ' ')}</div>
           </div>`;
 
         const el = document.createElement("div");
@@ -1453,7 +1450,7 @@ kakao.maps.event.addListener(marker, "click", () => {
       padding:.3rem .7rem; border-radius:6px;
       box-shadow:0 2px 8px rgba(0,0,0,.2);
       white-space:nowrap; margin-top:0px;
-    ">${lh.name}</div>`,
+    ">${lh.name.replace(/\n/g, ' ')}</div>`,
     yAnchor: -0.3,
     zIndex: 10,
   });

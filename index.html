@@ -345,9 +345,6 @@
    onmouseout="this.style.background='var(--white)';this.style.borderColor='var(--gray2)'">
   상세정보 보기 &nbsp;›
 </button>
-<div id="popup-scroll-hint" style="position:sticky; bottom:0; height:0; pointer-events:none; z-index:5; display:none;">
-  <div style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-top:9px solid var(--gray3); animation:popup-scroll-bounce 1.4s ease-in-out infinite;"></div>
-</div>
         </div>
       </div>
 
@@ -690,14 +687,6 @@ function selectLighthouse(lh) {
 // ════════════════════════════════════════
 //  팝업
 // ════════════════════════════════════════
-function updatePopupScrollHint() {
-  const popup = document.getElementById("popup");
-  const hint = document.getElementById("popup-scroll-hint");
-  if (!popup || !hint) return;
-  const isScrollable = popup.scrollHeight > popup.clientHeight + 2;
-  hint.style.display = (isScrollable && popup.scrollTop < 5) ? "block" : "none";
-}
-document.getElementById("popup").addEventListener("scroll", updatePopupScrollHint);
 
 function openPopup(lh, markerEl) {
   activeId = lh.id;
@@ -834,8 +823,29 @@ fetch(`${CONFIG.WEATHER_API_URL}/?lat=${lh.lat}&lng=${lh.lng}`)
   popup.style.animation = "none";
   popup.offsetHeight;
   popup.style.animation = "";
-  updatePopupScrollHint();
 
+  // 모바일: 스크롤 필요 여부 확인 (overflow > 0 이면 내용이 잘린 상태)
+  if (isMobileDevice()) {
+    setTimeout(() => {
+      const overflow = popup.scrollHeight - popup.clientHeight;
+      if (overflow > 0) {
+        // 1순위: 여백 압축
+        popup.classList.add('popup-compact');
+        const overflow2 = popup.scrollHeight - popup.clientHeight;
+
+        // 2순위: 여백 압축으로도 부족하면 사진 높이만 줄이기
+        if (overflow2 > 0) {
+          const imgEl = document.getElementById('popup-img');
+          if (imgEl) {
+            const reduced = Math.max(60, imgEl.offsetHeight - overflow2 - 8);
+            imgEl.style.height = reduced + 'px';
+          }
+        }
+      } else {
+        popup.classList.remove('popup-compact');
+      }
+    }, 100);
+  }
   // 클릭한 마커를 지도 중앙으로 이동 (시각적 효과)
   const layer = document.getElementById("markers-layer");
 const mapWrap = document.getElementById("map-wrap");
@@ -859,6 +869,8 @@ if (markerEl && layer && mapWrap) {
 function closePopup() {
   if (window._nameOverlay) { window._nameOverlay.setMap(null); window._nameOverlay = null; }
   document.getElementById("popup").classList.remove("visible");
+  document.getElementById("popup").classList.remove("popup-compact");
+  document.getElementById("popup-img").style.height = '';
   activeId = null;
   renderMarkers();
 }

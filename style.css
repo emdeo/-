@@ -574,6 +574,15 @@
 }
 .detail-cctv-btn:hover { background: var(--gray2); }
 
+/* 모바일 팝업 공간 부족 시 압축용 클래스 */
+#popup.popup-compact .popup-body { padding-top: .5rem; }
+#popup.popup-compact .popup-meta { margin-bottom: .3rem; }
+#popup.popup-compact .popup-weather { margin-bottom: .3rem; padding: .4rem 1rem; }
+#popup.popup-compact .weather-icon { font-size: 1.6rem; }
+#popup.popup-compact .weather-temp { font-size: 1.3rem; }
+#popup.popup-compact .dir-buttons { margin-bottom: .3rem; }
+#popup.popup-compact #btn-detail { margin-top: .3rem; }
+
 /* ── 패널 토글 버튼 ── */
 #panel-toggle {
   position: fixed;
@@ -1210,11 +1219,6 @@ body.ar-page nav a:hover {
 @keyframes fadeHint {
   0%   { opacity: 1; }
   100% { opacity: 0; }
-}
-
-@keyframes popup-scroll-bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.6; }
-  50%      { transform: translateX(-50%) translateY(5px); opacity: 1; }
 }
 
 /* 스크롤바 */

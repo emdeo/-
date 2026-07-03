@@ -30,7 +30,7 @@ function parseItems(xml) {
     const lngStr = get('wgs84East').replace('E', '').replace('W', '-');
     return {
       id: get('blfrNo'),
-      name: get('buoyKr'),
+      name: get('buoyKr').replace(/\n/g, ' ').replace(/\s+/g, ' ').trim(),
       nameEn: get('buoyEn'),
       type: get('buoyNm'),
       sea: get('seaNm'),

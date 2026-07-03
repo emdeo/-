@@ -842,11 +842,11 @@ function buildLightSimCard(code) {
     }
   });
 
-  document.getElementById("detail-reserve").onclick = () => {
-    window.open("https://island.theksa.co.kr/", "_blank");
-  };
-})();
+  })();
 
+document.getElementById("detail-reserve").onclick = () => {
+  window.open("https://island.theksa.co.kr/", "_blank");
+};
 document.getElementById("back-btn").onclick = () => {
   window.location.href = `index.html?focus=${encodeURIComponent(lh.id)}`;
 };

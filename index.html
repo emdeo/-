@@ -1337,6 +1337,10 @@ clusterer.setStyles([{
   lineHeight: "44px", fontSize: "13px", fontWeight: "700",
   border: "2px solid white", boxShadow: "0 2px 8px rgba(0,0,0,.2)"
 }]);
+// 필터 하나만 단독으로 켰는지 여부 (개별 마커 색상 강제 지정용)
+const onlyStampFilter = filterState.month.size === 0 && filterState.year.size === 0 && filterState.stamp.size > 0;
+const onlyYearFilter  = filterState.stamp.size === 0 && filterState.month.size === 0 && filterState.year.size > 0;
+const onlyMonthFilter = filterState.stamp.size === 0 && filterState.year.size === 0 && filterState.month.size > 0;
       const activeStampCats = Object.entries(stampCatMap)
         .filter(([key]) => filterState.stamp.has(key))
         .map(([, cat]) => cat);
@@ -1404,9 +1408,12 @@ clusterer.setStyles([{
         if (!shouldShow) return;
 
       const position = new kakao.maps.LatLng(lh.lat, lh.lng);
-        const markerImage = lh.tags.includes("month") && !isYear && !isStamp ? markerImages.month
-                 : isYear ? markerImages.year
+        const markerImage = onlyStampFilter ? markerImages.stamp
+                 : onlyYearFilter ? markerImages.year
+                 : onlyMonthFilter ? markerImages.month
                  : isStamp ? markerImages.stamp
+                 : isYear ? markerImages.year
+                 : lh.tags.includes("month") ? markerImages.month
                  : markerImages.none;
         const marker = new kakao.maps.Marker({ position, image: markerImage });
         marker._lhId = lh.id;

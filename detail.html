@@ -120,7 +120,10 @@
   <!-- 등대 이름 + 한줄소개 + 세부정보 -->
   <div class="detail-top-card">
     <div class="detail-oneline" id="detail-desc">등대 설명이 들어갑니다.</div>
-    <div class="detail-name" id="detail-name">등대 이름</div>
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+      <div class="detail-name" id="detail-name" style="margin:0;">등대 이름</div>
+      <button id="detail-btn-my-star" onclick="openDetailMyLhModal()" title="내 등대 저장" style="width:36px;height:36px;border-radius:50%;border:1.5px solid var(--gray2);background:var(--white);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,0.1);transition:all .15s;">☆</button>
+    </div>
     <div class="detail-tags" id="detail-tags"></div>
     <div class="detail-sub-rows" id="detail-sub-rows">
       <div class="detail-sub-row">
@@ -228,21 +231,26 @@
   <div class="section-card" id="section-basic-info">
     <div class="section-title">💡 등질 정보 &amp; 등대 이야기</div>
 
-    <!-- 핑크 배지 줄 -->
+    <!-- 핑크 배지 줄 (항상 표시) -->
     <div id="light-badge-row" class="light-badge-row"></div>
 
-    <!-- 초록(SVG 애니메이션) + 보라(말풍선) -->
-    <div class="light-explain-row">
-      <div id="light-sim-icon" class="light-explain-icon"></div>
-      <div class="light-explain-bubble">
-        <div class="light-explain-tip"></div>
-        <div class="light-explain-tip-inner"></div>
-        <span id="mascot-message">등대 불빛의 의미는 ~</span>
-      </div>
-    </div>
+    <!-- 더보기/접기 버튼 (모바일에서만 보임) -->
+    <button class="light-story-toggle-btn" id="light-story-toggle-btn">등대 이야기 더보기 ▾</button>
 
-    <!-- 사진 (방파제/방사제일 때만 표시) -->
-    <img id="mascot-img" src="흰색등대(낮)_PC버전.png" class="light-explain-photo" style="display:none;">
+    <!-- 모바일에서만 접히는 영역: 초록(SVG 애니메이션) + 보라(말풍선) + 사진 -->
+    <div id="light-story-content" class="light-story-content">
+      <div class="light-explain-row">
+        <div id="light-sim-icon" class="light-explain-icon"></div>
+        <div class="light-explain-bubble">
+          <div class="light-explain-tip"></div>
+          <div class="light-explain-tip-inner"></div>
+          <span id="mascot-message">등대 불빛의 의미는 ~</span>
+        </div>
+      </div>
+
+      <!-- 사진 (방파제/방사제일 때만 표시) -->
+      <img id="mascot-img" src="흰색등대(낮)_PC버전.png" class="light-explain-photo" style="display:none;">
+    </div>
   </div>
 
   <!-- 사진 갤러리 -->
@@ -715,6 +723,15 @@ function buildLightSimCard(code) {
   if (mascotMsgEl) {
     mascotMsgEl.innerHTML = descHtml + mascotMsgEl.innerHTML;
   }
+}
+// 등질 정보 & 등대 이야기: 더보기/접기 토글 (모바일 전용, CSS 미디어쿼리와 함께 동작)
+const lightStoryToggleBtn = document.getElementById("light-story-toggle-btn");
+const lightStoryContent = document.getElementById("light-story-content");
+if (lightStoryToggleBtn && lightStoryContent) {
+  lightStoryToggleBtn.onclick = () => {
+    const expanded = lightStoryContent.classList.toggle("expanded");
+    lightStoryToggleBtn.textContent = expanded ? "등대 이야기 접기 ▴" : "등대 이야기 더보기 ▾";
+  };
 }
 
 // 배편 정보 로드
@@ -1556,6 +1573,25 @@ function shareLhViewerImage() {
   shareLhImage(src, fname);
 }
 
+// 페이지 자체 공유하기 (우측 하단 공유 버튼)
+async function shareLhPage() {
+  const shareData = {
+    title: `${(lh.name || '등대').replace(/\n/g, ' ')} - 안녕, 등대`,
+    text: `${(lh.name || '등대').replace(/\n/g, ' ')} 정보를 확인해보세요!`,
+    url: window.location.href
+  };
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else if (navigator.clipboard) {
+      await navigator.clipboard.writeText(shareData.url);
+      alert('링크가 복사되었어요!');
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') console.error('공유 오류', err);
+  }
+}
+
 async function deleteLhPhoto(photoId) {
   if (!confirm('이 사진을 삭제하시겠습니까?')) return;
   await LhPhotoDB.delete(photoId);
@@ -1651,7 +1687,10 @@ document.addEventListener("click", e => {
       </div>
       <div class="detail-top-card">
         <div class="detail-oneline">Muneo, 동해안</div>
-        <div class="detail-name">문어 등대(예시)</div>
+        <div id="dt-fake-star-row" style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+          <div class="detail-name" style="margin:0;">문어 등대(예시)</div>
+          <button style="width:36px;height:36px;border-radius:50%;border:1.5px solid var(--gray2);background:var(--white);font-size:20px;cursor:default;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 1px 4px rgba(0,0,0,0.1);">⭐</button>
+        </div>
         <div class="detail-tags">
           <span class="detail-tag" style="background:#fef3c7;color:#92400e;">스탬프 투어</span>
           <span class="detail-tag" style="background:#dcfce7;color:#166534;">이달의 등대</span>
@@ -1888,6 +1927,11 @@ document.addEventListener("click", e => {
     </div>
   </div>
 </div>
+<!-- 페이지 공유하기 버튼 -->
+<button id="page-share-btn" class="page-share-btn" onclick="shareLhPage()">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+</button>
+
 <!-- 맨 위로 가기 버튼 -->
 <button id="scroll-top-btn" class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
 
@@ -1900,28 +1944,30 @@ window.addEventListener("scroll", () => {
 const DETAIL_TUTORIAL_STEPS = [
   { target: null, img: 'tutorial-mascot-1.png',
     text: '안녕! 이건 예시로 만든 "문어 등대" 페이지야.<br>등대 상세 페이지를 설명해줄게.' },
-  { target: '#dt-fake-top', img: 'tutorial-mascot-2.png',
-    text: '<b>[기본 정보]</b><br>등대 사진과 등대 이름, 한줄 소개, 위치 같은 기본 정보가 여기 보여.' },
+ { target: '#dt-fake-top', img: 'tutorial-mascot-2.png',
+    text: '등대 사진과 등대 이름, 위치 같은 기본 정보가 여기 보여.' },
+  { target: '#dt-fake-star-row', img: 'tutorial-mascot-1.png',
+    text: '⭐ 별 버튼을 누르면 이 등대를 "다녀온 등대" 또는 "가고 싶은 등대"로 저장할 수 있어.' },
   { target: '#dt-fake-dir', img: 'tutorial-mascot-4.png',
-    text: '<b>[길찾기]</b><br>네이버지도나 카카오맵으로 바로 길찾기를 할 수 있어.' },
+    text: '네이버지도나 카카오맵으로 바로 길찾기를 할 수 있어.' },
   { target: '#dt-fake-ferry', img: 'tutorial-mascot-2.png',
-    text: '<b>[배편 정보]</b><br>가까운 항구의 배편 시간표를 보여줘. 운항 정보가 없는 기간엔 이렇게 안내 문구가 나와.' },
+    text: '가까운 항구의 시간표를 보여줘. 정보가 없으면 이렇게 안내 문구가 나와.' },
   { target: '#dt-fake-weather', img: 'tutorial-mascot-3.png',
-    text: '<b>[현재 날씨]</b><br>실시간 날씨랑 "바다여행지수"(여행하기 좋은 날인지)를 보여줘. CCTV로 등대 근처 날씨도 볼 수 있어.' },
+    text: '현재 날씨랑 "바다여행지수"(여행하기 좋은 날인지)를 보여줘. CCTV로 등대 근처 날씨도 볼 수 있어.' },
   { target: '#dt-fake-forecast', img: 'tutorial-mascot-4.png',
-    text: '<b>[주간 예보]</b><br>앞으로 4일 동안의 날씨와 바다여행·뱃멀미·갯벌체험지수를 한눈에 볼 수 있어.' },
+    text: '앞으로 4일 동안의 날씨와 바다여행·뱃멀미·갯벌체험지수를 한눈에 볼 수 있어.' },
   { target: '#dt-fake-tide', img: 'tutorial-mascot-1.png',
-    text: '<b>[조석 정보]</b><br>오늘의 만조·간조 시간과 물높이를 보여줘.' },
+    text: '오늘의 만조·간조 시간과 물높이를 보여줘.' },
   { target: '#dt-fake-parking', img: 'tutorial-mascot-3.png',
-    text: '<b>[주차장 / 화장실]</b><br>등대 주변 가까운 공영주차장이랑 화장실 위치를 알려줘.' },
+    text: '등대 주변 가까운 공영주차장이랑 화장실 위치를 알려줘.' },
   { target: '#dt-fake-light', img: 'tutorial-mascot-4.png',
-    text: '<b>[등질 정보 &amp; 이야기]</b><br>등대 불빛 색깔과 주기 등의 정보를 알려줘.' },
+    text: '등대 불빛 색깔과 주기 등의 정보를 알려줘.' },
   { target: '#dt-fake-gallery', img: 'tutorial-mascot-2.png',
-    text: '<b>[인증 사진]</b><br>등대 앞에서 사진을 찍어서 나만의 등대 인증 사진을 모아둘 수 있어.' },
+    text: '등대 앞에서 사진을 찍어서 나만의 등대 인증 사진을 모아둘 수 있어.' },
   { target: '#dt-fake-photo-sample', img: 'tutorial-mascot-1.png',
-    text: '<b>[사진 예시]</b><br>이렇게 찍은 사진들이 인증 사진으로 저장돼!' },
+    text: '이렇게 찍은 사진들이 인증 사진으로 저장돼!' },
   { target: '#dt-fake-ai', img: 'tutorial-mascot-1.png',
-    text: '<b>[AI 등대 정보]</b><br>버튼을 누르면 AI가 검색해서 이 등대의 역사·맛집·주변 관광지를 정리해줘.' },
+    text: '버튼을 누르면 AI가 검색해서 이 등대의 역사·맛집·주변 관광지를 정리해줘.' },
   { target: '#dt-fake-tutorial-btn', img: 'tutorial-mascot-2.png',
     text: '이제 실제 등대 페이지로 돌아가자!<br>나를 다시 보고 싶으면 우측 상단의 "상세 기능 설명" 버튼을 누르면 돼!' },
 ];
@@ -2077,6 +2123,111 @@ window.addEventListener('resize', () => {
 if (!localStorage.getItem('lh-detail-tutorial-dismissed')) {
   openDetailTutorial();
 }
+// ── 내 등대 저장 (detail.html) ──
+function getMyLh(type) {
+  try { return new Set(JSON.parse(localStorage.getItem('lh-my-' + type) || '[]')); }
+  catch { return new Set(); }
+}
+function saveMyLh(type, set) {
+  try { localStorage.setItem('lh-my-' + type, JSON.stringify([...set])); }
+  catch {}
+}
+
+function updateDetailMyStarBtn() {
+  const id = String(lh.id || lh.name);
+  const visited  = getMyLh('visited');
+  const wishlist = getMyLh('wishlist');
+  const btn = document.getElementById('detail-btn-my-star');
+  if (btn) btn.textContent = (visited.has(id) || wishlist.has(id)) ? '⭐' : '☆';
+}
+
+function openDetailMyLhModal() {
+  const id = String(lh.id || lh.name);
+  const tempVisited  = new Set(getMyLh('visited'));
+  const tempWishlist = new Set(getMyLh('wishlist'));
+
+  let modal = document.getElementById('detail-my-lh-modal');
+  if (modal) modal.remove();
+
+  modal = document.createElement('div');
+  modal.id = 'detail-my-lh-modal';
+  modal.style.cssText = `position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;`;
+  modal.innerHTML = `
+    <div style="background:#fff;border-radius:16px;padding:0;max-width:300px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.18);overflow:hidden;">
+      <div style="padding:20px 20px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+          <div style="font-size:1rem;font-weight:800;color:var(--navy);">${(lh.name||'').replace(/\n/g,' ')}</div>
+          <button onclick="document.getElementById('detail-my-lh-modal').remove()" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--gray3);padding:0 0 0 8px;">✕</button>
+        </div>
+        <div style="font-size:0.8rem;color:var(--gray3);margin-bottom:16px;">저장할 리스트를 선택하세요</div>
+      </div>
+      <div style="border-top:1px solid var(--gray1);">
+        <div onclick="detailToggleTempMyLh('visited')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;border-bottom:1px solid var(--gray1);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.2rem;">🆗</span>
+            <span style="font-size:0.95rem;font-weight:600;color:var(--navy);">다녀온 등대</span>
+          </div>
+          <div id="detail-my-check-visited" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--gray2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .15s;"></div>
+        </div>
+        <div onclick="detailToggleTempMyLh('wishlist')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.2rem;">⭐</span>
+            <span style="font-size:0.95rem;font-weight:600;color:var(--navy);">가고싶은 등대</span>
+          </div>
+          <div id="detail-my-check-wishlist" style="width:22px;height:22px;border-radius:50%;border:2px solid var(--gray2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .15s;"></div>
+        </div>
+      </div>
+      <div style="padding:14px 20px;">
+        <button id="detail-my-save-btn" style="width:100%;padding:.7rem;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--font-sans);">저장</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  window._detailMyLhTemp = { id, tempVisited, tempWishlist };
+  detailRenderMyLhUI();
+
+  window.detailToggleTempMyLh = function(type) {
+    const t = window._detailMyLhTemp;
+    if (type === 'visited') {
+      t.tempVisited.has(t.id) ? t.tempVisited.delete(t.id) : t.tempVisited.add(t.id);
+    } else {
+      t.tempWishlist.has(t.id) ? t.tempWishlist.delete(t.id) : t.tempWishlist.add(t.id);
+    }
+    detailRenderMyLhUI();
+  };
+
+  document.getElementById('detail-my-save-btn').onclick = function() {
+    const t = window._detailMyLhTemp;
+    saveMyLh('visited',  t.tempVisited);
+    saveMyLh('wishlist', t.tempWishlist);
+    updateDetailMyStarBtn();
+    document.getElementById('detail-my-lh-modal').remove();
+  };
+
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+}
+
+function detailRenderMyLhUI() {
+  const t = window._detailMyLhTemp;
+  const cv = document.getElementById('detail-my-check-visited');
+  const cw = document.getElementById('detail-my-check-wishlist');
+  if (cv) {
+    cv.style.background = t.tempVisited.has(t.id) ? 'var(--navy)' : '#fff';
+    cv.style.borderColor = t.tempVisited.has(t.id) ? 'var(--navy)' : 'var(--gray2)';
+    cv.style.color = '#fff';
+    cv.textContent = t.tempVisited.has(t.id) ? '✓' : '';
+  }
+  if (cw) {
+    cw.style.background = t.tempWishlist.has(t.id) ? 'var(--navy)' : '#fff';
+    cw.style.borderColor = t.tempWishlist.has(t.id) ? 'var(--navy)' : 'var(--gray2)';
+    cw.style.color = '#fff';
+    cw.textContent = t.tempWishlist.has(t.id) ? '✓' : '';
+  }
+}
+
+// 페이지 로드 시 별 상태 초기화
+updateDetailMyStarBtn();
 </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "09f6da4e2c634c26b59fe1707086bf54"}'></script><!-- End Cloudflare Web Analytics -->
 </body>

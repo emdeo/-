@@ -1431,16 +1431,6 @@ const LIGHTHOUSE_DATA =
     "lng": 129.3768611
   },
   {
-    "id": "1266.3",
-    "name": "석호항 동방파제 등대",
-    "nameEn": "Seokho Hang",
-    "type": "고정표지",
-    "sea": "동해안",
-    "light": "Fl R 6s 11m 8M",
-    "lat": 37.1122778,
-    "lng": 129.3773056
-  },
-  {
     "id": "1266.4",
     "name": "부구 남방파제 등대",
     "nameEn": "Bugu",
@@ -5475,7 +5465,7 @@ const LIGHTHOUSE_DATA =
     "name": "가오도 등대",
     "nameEn": "Gaodo",
     "type": "고정표지",
-    "sea": "남��안",
+    "sea": "남해안",
     "light": "Fl W 6s 17m 10M",
     "lat": 34.6809722,
     "lng": 128.5802778
@@ -8019,16 +8009,6 @@ const LIGHTHOUSE_DATA =
     "light": "Fl(4) Y 8s 11m 7M",
     "lat": 34.5240833,
     "lng": 127.1225556
-  },
-  {
-    "id": "2553.1",
-    "name": "녹동항 돌제 등대",
-    "nameEn": "Nokdong Hang Jetty",
-    "type": "고정표지",
-    "sea": "남해안",
-    "light": "Fl R 5s 11m 7M",
-    "lat": 34.5273333,
-    "lng": 127.1266944
   },
   {
     "id": "2553.5",
@@ -11046,7 +11026,7 @@ const LIGHTHOUSE_DATA =
     "nameEn": "Mokpo Hang",
     "type": "고정표지",
     "sea": "서해안",
-    "light": "Fl(4) Y 8s",
+    "light": "Fl(2) Y 6s 9.2m 7M",
     "lat": 34.7785556,
     "lng": 126.4267778
   },
@@ -11056,7 +11036,7 @@ const LIGHTHOUSE_DATA =
     "nameEn": "Mokpo Hang",
     "type": "고정표지",
     "sea": "서해안",
-    "light": "Fl(2) Y 6s 9.2m 7M",
+    "light": "Fl(4) Y 8s",
     "lat": 34.7785556,
     "lng": 126.4267778
   },
@@ -13052,7 +13032,7 @@ const LIGHTHOUSE_DATA =
   },
   {
     "id": "3325.1",
-    "name": "평택·당진항 내항 남방파제 등대",
+    "name": "평택·당진�� 내항 남방파제 등대",
     "nameEn": "Pyeongtaek·Dangjin Hang",
     "type": "고정표지",
     "sea": "서해안",
@@ -13389,6 +13369,16 @@ const LIGHTHOUSE_DATA =
     "light": "Fl W 6s 38m 11M",
     "lat": 37.1159722,
     "lng": 126.3856111
+  },
+  {
+    "id": "3403",
+    "name": "말육도 등대",
+    "nameEn": "Maryukdo",
+    "type": "고정표지",
+    "sea": "서해안",
+    "light": "Fl W 5s 42m 8M",
+    "lat": 37.1164167,
+    "lng": 126.4535
   },
   {
     "id": "3418",
@@ -14619,16 +14609,6 @@ const LIGHTHOUSE_DATA =
     "light": "Fl G 5s 15m 8M",
     "lat": 37.9540278,
     "lng": 124.7383333
-  },
-  {
-    "id": "3901",
-    "name": "방도 등대",
-    "nameEn": "Bangdo",
-    "type": "고정표지",
-    "sea": "서해안",
-    "light": "Fl W 12s 9m 5M",
-    "lat": 37.7645556,
-    "lng": 125.6295278
   },
   {
     "id": "50100",

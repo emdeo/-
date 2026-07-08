@@ -68,10 +68,11 @@ async function main() {
   console.log('전체 항목:', allItems.length);
 
  const EXCLUDE_IDS = [
-    "1204_A",
-    "2537.2",
-    "3306.5",
-  ];
+  "1204_A",
+  "2537.2",
+  "3306.5",
+  "3901", // 방도 등대 - 북한(황해남도) 소재
+];
 
   const filtered = allItems
     .filter(d => d.name.includes('등대'))

@@ -34,6 +34,10 @@
     <a href="index.html">등대 지도</a>
     <a href="news.html" class="active">실시간 등대 식별</a>
     <a href="#" onclick="event.preventDefault(); document.getElementById('links-overlay').classList.add('visible');">관련 사이트 바로가기</a>
+    <div class="font-size-control">
+      <button id="font-size-down" title="글자 작게">가−</button>
+      <button id="font-size-up" title="글자 크게">가+</button>
+    </div>
   </nav>
 </header>
 
@@ -46,13 +50,13 @@
     <div class="start-bubble">
       <div class="start-bubble-tail"></div>
       <h2>실시간 등대 식별</h2>
-      <p>현재 위치를 기반으로 주변 등대를 실시간으로 식별해줄게.<br>폰을 돌리면 등대가 실제 방향으로 따라와!</p>
+      <p>현재 위치 중심으로 주변 등대를 식별해줄게.<br>폰을 돌리면 등대가 실제 방향으로 따라와!</p>
       <div class="start-features">
         <div class="start-feature"><span>📍</span><span>이 기능은 GPS 위치 권한이 필요해</span></div>
         <div class="start-feature"><span>📷</span><span>모바일은 카메라 권한이 필요해!</span></div>
         <div class="start-feature"><span>🖱️</span><span>데스크탑은 드래그로 방향 탐색하면 돼</span></div>
       </div>
-      <button id="start-btn">시작하기</button>
+      <button id="start-btn">시작</button>
     </div>
   </div>
 </div>
@@ -71,9 +75,9 @@
       <div class="tutorial-bubble-tail"></div>
       <div class="tutorial-text" id="ar-tutorial-text"></div>
       <div class="tutorial-bottom-row">
-        <button class="tutorial-prev-btn" id="ar-tutorial-prev-btn">◀ 이전</button>
+        <button class="tutorial-prev-btn" id="ar-tutorial-prev-btn">◀</button>
         <span class="tutorial-progress" id="ar-tutorial-progress"></span>
-        <button class="tutorial-next-btn" id="ar-tutorial-next-btn">다음 ▶</button>
+        <button class="tutorial-next-btn" id="ar-tutorial-next-btn">▶</button>
       </div>
     </div>
   </div>
@@ -849,10 +853,7 @@ function attachArTutorialDrag() {
   const onDown = e => {
     dragging = true;
     lastX = (e.touches ? e.touches[0].clientX : e.clientX);
-    // 나침반 버튼이 소개된 단계부터: 드래그 시작 → 가짜 센서 끄기 (진짜 AR과 동일)
-    if (arTutorialCompassStepIdx !== -1 && arTutorialIdx >= arTutorialCompassStepIdx) {
-      arTutorialSensorActive = false;
-    }
+    arTutorialSensorActive = false;
   };
   const onMove = e => {
     if (!dragging) return;
@@ -964,7 +965,7 @@ function renderArTutorialStep() {
   document.getElementById('ar-tutorial-progress').textContent = (arTutorialIdx + 1) + ' / ' + AR_TUTORIAL_ACTIVE_STEPS.length;
   document.getElementById('ar-tutorial-prev-btn').style.visibility = (arTutorialIdx === 0) ? 'hidden' : 'visible';
   document.getElementById('ar-tutorial-next-btn').textContent =
-    (arTutorialIdx === AR_TUTORIAL_ACTIVE_STEPS.length - 1) ? '시작하기' : '다음 ▶';
+    (arTutorialIdx === AR_TUTORIAL_ACTIVE_STEPS.length - 1) ? '시작하기' : '▶';
   document.getElementById('ar-tutorial-chevrons').style.display = step.chevrons ? 'flex' : 'none';
 
   if (step.showRangeControl) {
@@ -1133,5 +1134,27 @@ document.getElementById("compass-btn").addEventListener("click", () => {
   </div>
 </div>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "09f6da4e2c634c26b59fe1707086bf54"}'></script><!-- End Cloudflare Web Analytics -->
+
+<script>
+(function() {
+  const STEPS = [14, 16, 18, 20, 22]; // px 단위, 5단계 (기본: 2단계 = 16px)
+  const STORAGE_KEY = 'lh-font-size-step'; // index.html/detail.html이랑 같은 키 → 크기 선택이 유지됨
+  let idx = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+  if (isNaN(idx) || idx < 0 || idx >= STEPS.length) idx = 1;
+
+  function applyFontSize() {
+    document.documentElement.style.fontSize = STEPS[idx] + 'px';
+    localStorage.setItem(STORAGE_KEY, idx);
+  }
+  applyFontSize();
+
+  document.getElementById('font-size-up').addEventListener('click', () => {
+    if (idx < STEPS.length - 1) { idx++; applyFontSize(); }
+  });
+  document.getElementById('font-size-down').addEventListener('click', () => {
+    if (idx > 0) { idx--; applyFontSize(); }
+  });
+})();
+</script>
 </body>
 </html>

@@ -2314,9 +2314,17 @@ if (!localStorage.getItem('lh-tutorial-dismissed')) {
 
 // ── 방문자 카운터 ──
 (function() {
-  fetch('https://lighthouse-weather.ehdgml5032.workers.dev/visit')
+  const KEY = 'lh-visit-counted';
+  const alreadyCounted = sessionStorage.getItem(KEY);
+
+  const url = alreadyCounted
+    ? 'https://lighthouse-weather.ehdgml5032.workers.dev/visit-count'  // 숫자만 조회, 카운트 안 올림
+    : 'https://lighthouse-weather.ehdgml5032.workers.dev/visit';       // 실제로 +1
+
+  fetch(url)
     .then(res => res.json())
     .then(data => {
+      if (!alreadyCounted) sessionStorage.setItem(KEY, '1');
       if (!data.count) return;
       const el1 = document.getElementById('visit-count-num');
       const el2 = document.getElementById('visit-count-num-modal');

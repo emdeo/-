@@ -1381,7 +1381,7 @@ function _lhToDM(deg, isLat) {
 const _lhMascotImg = new Image();
 _lhMascotImg.src = '문어등대.png';
 
-function _lhWatermark(file) {
+function _lhWatermark(file, userLat, userLng) {
   return new Promise((res,rej) => {
     const reader = new FileReader();
     reader.onload = ev => {
@@ -1410,8 +1410,8 @@ function _lhWatermark(file) {
         ctx.fillStyle = '#ffffff';
         ctx.fillText((lh.name||'등대').replace(/\s+/g,''), PAD, H-BAR_H+8);
 
-        const lat = lh.lat ? _lhToDM(lh.lat, true)  : '';
-        const lng = lh.lng ? _lhToDM(lh.lng, false) : '';
+        const lat = userLat != null ? _lhToDM(userLat, true)  : (lh.lat ? _lhToDM(lh.lat, true) : '');
+        const lng = userLng != null ? _lhToDM(userLng, false) : (lh.lng ? _lhToDM(lh.lng, false) : '');
         const locStr = (lat&&lng) ? `${lat}  ${lng}` : '';
         ctx.font      = `${FONT_SM}px "Malgun Gothic",sans-serif`;
         ctx.fillStyle = 'rgba(255,255,255,0.8)';
@@ -1458,7 +1458,16 @@ function pickLhPhoto() {
     const file = e.target.files?.[0];
     if (!file) { document.body.removeChild(inp); return; }
     try {
-      const { dataUrl, thumb, date } = await _lhWatermark(file);
+      // 실시간 GPS 위치 요청 (실패/거부 시 null)
+      const userPos = await new Promise(res => {
+        if (!navigator.geolocation) return res(null);
+        navigator.geolocation.getCurrentPosition(
+          p => res({ lat: p.coords.latitude, lng: p.coords.longitude }),
+          () => res(null),
+          { enableHighAccuracy: true, timeout: 5000 }
+        );
+      });
+      const { dataUrl, thumb, date } = await _lhWatermark(file, userPos?.lat, userPos?.lng);
       const lhId = String(lh.id || lh.name);
       await LhPhotoDB.save(lhId, dataUrl, thumb, date);
 

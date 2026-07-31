@@ -520,56 +520,17 @@ const stampInfo = (typeof STAMP_DATA !== 'undefined')
 const seaLabel = lh.sea === '서해안' ? '서해안' : lh.sea === '동해안' ? '동해안' : lh.sea === '남해안' ? '남해안' : lh.sea || '';
 document.getElementById("detail-desc").textContent = (lh.nameEn ? lh.nameEn + (seaLabel ? ',  ' + seaLabel : '') : seaLabel);
 
-// 좌표 → 주소 변환 (카카오 API)
-// 1순위: coord2address (도로명/지번 주소) → 실패 시 2순위: coord2regioncode (행정구역명)
-function fetchRegionFallback() {
-  return fetch(`https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${lh.lng}&y=${lh.lat}`, {
-    headers: { Authorization: `KakaoAK ${CONFIG.KAKAO_REST_KEY}` }
-  })
-  .then(r => r.json())
-  .then(data => {
-    const doc = (data.documents || []).find(d => d.region_type === 'H') || data.documents?.[0];
-    const addr = doc?.address_name || '';
-    document.getElementById("detail-region").textContent = addr || lh.region || '';
-    const splitKeywords = (name) =>
-      (name || '').split(/\s+/).map(w => w.replace(/(시|군|구|읍|면|동|리)$/, '')).filter(Boolean);
-    const keywords = [
-      ...splitKeywords(doc?.region_2depth_name),
-      ...splitKeywords(doc?.region_3depth_name),
-    ];
-    return [...new Set(keywords)];
-  })
-  .catch(() => {
-    document.getElementById("detail-region").textContent = lh.region || '';
-    return [];
-  });
-}
-
-const regionKeywordsReady = fetch(`https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lh.lng}&y=${lh.lat}`, {
-  headers: { Authorization: `KakaoAK ${CONFIG.KAKAO_REST_KEY}` }
-})
+// 좌표 → 주소 변환 (Cloudflare Worker 경유, REST 키는 워커에 숨김)
+const regionKeywordsReady = fetch(`${CONFIG.WEATHER_API_URL}/geocode?lat=${lh.lat}&lng=${lh.lng}`)
 .then(r => r.json())
 .then(data => {
-  const doc = data.documents?.[0];
-  const addr = doc?.road_address?.address_name || doc?.address?.address_name || '';
-
-  // coord2address 실패(주소 없음) → coord2regioncode로 재시도
-  if (!addr) {
-    return fetchRegionFallback();
-  }
-
-  document.getElementById("detail-region").textContent = addr;
-  const a = doc?.address || {};
-  // 단어 단위로 쪼개서 각 단어의 행정구역 접미사(시/군/구/읍/면/동/리)를 떼어냄
-  const splitKeywords = (name) =>
-    (name || '').split(/\s+/).map(w => w.replace(/(시|군|구|읍|면|동|리)$/, '')).filter(Boolean);
-  const keywords = [
-    ...splitKeywords(a.region_2depth_name),
-    ...splitKeywords(a.region_3depth_name),
-  ];
-  return [...new Set(keywords)];
+  document.getElementById("detail-region").textContent = data.addr || lh.region || '';
+  return data.keywords || [];
 })
-.catch(() => fetchRegionFallback());
+.catch(() => {
+  document.getElementById("detail-region").textContent = lh.region || '';
+  return [];
+});
 // 운영시간/전화/문화재 — 값 있을 때만 표시
 const openVal = (stampInfo && stampInfo.open) ? stampInfo.open : '';
 const contactVal = (stampInfo && stampInfo.contact) ? stampInfo.contact : '';
@@ -1179,9 +1140,7 @@ if (lh.lat && lh.lng) {
 }
 
 // 주차장 정보 로드
-fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?query=공영주차장&x=${lh.lng}&y=${lh.lat}&sort=distance`, {
-  headers: { 'Authorization': `KakaoAK ${CONFIG.KAKAO_REST_KEY}` }
-})
+fetch(`${CONFIG.WEATHER_API_URL}/nearby?query=공영주차장&lat=${lh.lat}&lng=${lh.lng}`)
 .then(r => r.json())
 .then(data => {
   const parkingEl = document.getElementById('detail-parking');
@@ -1212,9 +1171,7 @@ fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?query=공영주차장
 });
 
 // 화장실 정보 로드
-fetch(`https://dapi.kakao.com/v2/local/search/keyword.json?query=공중화장실&x=${lh.lng}&y=${lh.lat}&sort=distance`, {
-  headers: { 'Authorization': `KakaoAK ${CONFIG.KAKAO_REST_KEY}` }
-})
+fetch(`${CONFIG.WEATHER_API_URL}/nearby?query=공중화장실&lat=${lh.lat}&lng=${lh.lng}`)
 .then(r => r.json())
 .then(data => {
   const toiletEl = document.getElementById('detail-toilet');

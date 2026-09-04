@@ -10,7 +10,7 @@ const PORT_DATA = [
   { nodeId: "SEA44060", name: "강릉",     lat: 37.7652, lng: 128.9040 },
   { nodeId: "SEA43030", name: "후포",     lat: 36.6803, lng: 129.4564 },
   { nodeId: "SEA43010", name: "포항",     lat: 36.0571, lng: 129.3811 },
-  { nodeId: "SEA43110", name: "울릉도",   lat: 37.4839, lng: 130.9057 },
+  { nodeId: "SEA43110", name: "울릉",   lat: 37.4839, lng: 130.9057 },
 
   // ── 남해안 ──
   { nodeId: "SEA42010", name: "부산",             lat: 35.0966, lng: 129.0357 },
